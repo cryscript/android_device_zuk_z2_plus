@@ -1,12 +1,6 @@
 [ 
   {
     "remote": "cm",
-    "repository": "android_device_oppo_common",
-    "target_path": "device/oppo/common"
-    "revision": "cm-13.0"
-  },
-  {
-    "remote": "cm",
     "repository": "android_device_qcom_common",
     "target_path": "device/qcom/common",
     "revision": "cm-13.0"
