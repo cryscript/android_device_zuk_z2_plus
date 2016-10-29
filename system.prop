@@ -27,7 +27,7 @@ persist.panel.mountflip=3
 
 # OTA Updates
 ro.ota.systemname=Bliss-M
-ro.ota.version=Bliss-M_2016102900
+ro.ota.version=2016102900
 ro.ota.manifest=https://raw.githubusercontent.com/cryscript/misc/Bliss-M/ota.xml
 
 debug.sf.hw=1
