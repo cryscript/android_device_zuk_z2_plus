@@ -33,6 +33,8 @@ BOARD_VENDOR := zuk
 
 # Blissful building options
 
+BLISS_DEVELOPER := Fedor917
+BLISS_BUILD_BLOCK := 1
 BLISSIFY := true
 BLISS_O3 := true
 BLISS_GRAPHITE := true
@@ -83,8 +85,6 @@ TARGET_KERNEL_SOURCE := kernel/zuk/msm8996
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
-
-BLOCK_BASED_OTA := true
 
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "qualcomm-uart"

@@ -25,11 +25,6 @@ ro.telephony.default_network=22,22
 persist.panel.inversemounted=1
 persist.panel.mountflip=3
 
-# OTA Updates
-ro.ota.systemname=Bliss-M
-ro.ota.version=2016102900
-ro.ota.manifest=https://raw.githubusercontent.com/cryscript/misc/Bliss-M/ota.xml
-
 debug.sf.hw=1
 debug.egl.hw=1
 debug.gralloc.enable_fb_ubwc=1
