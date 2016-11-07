@@ -3,3 +3,5 @@ allow system_server proc_touchpanel:dir search;
 allow system_server proc_touchpanel:file { write open getattr read };
 allow system_server sensors_persist_file:file { read getattr open };
 allow system_server sensors_persist_file:dir search;
+allow system_server dex2oat_exec:file { getattr read open execute execute_no_trans };
+allow system_server cache_file:file execute;

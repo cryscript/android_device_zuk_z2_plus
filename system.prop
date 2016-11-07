@@ -26,9 +26,9 @@ persist.panel.inversemounted=1
 persist.panel.mountflip=3
 
 # OTA Updates
-ro.ota.systemname=CM13
-ro.ota.version=2016102900
-ro.ota.manifest=https://raw.githubusercontent.com/cryscript/misc/master/ota.xml
+ro.ota.systemname=SlimM
+ro.ota.version=2016110700
+ro.ota.manifest=https://raw.githubusercontent.com/cryscript/misc/Slim-M/ota.xml
 
 debug.sf.hw=1
 debug.egl.hw=1

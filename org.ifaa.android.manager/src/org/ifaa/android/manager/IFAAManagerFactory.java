@@ -47,7 +47,7 @@ public class IFAAManagerFactory extends IFAAManager {
     }
 
     public String getDeviceModel() {
-        return "ZUK-Z2131";
+        return "ONEPLUS-A3000";
     }
 
     public int getVersion() {
