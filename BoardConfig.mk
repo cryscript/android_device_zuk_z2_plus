@@ -113,7 +113,7 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 BOARD_HAL_STATIC_LIBRARIES += libhealthd.zuk
 
-# Slim Hardware
+# PAC Hardware
 BOARD_HARDWARE_CLASS += $(PLATFORM_PATH)/cmhw
 TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/touch/tp_dev/gesture_on"
 BOARD_USES_CYANOGEN_HARDWARE := true
@@ -177,6 +177,7 @@ TARGET_POWERHAL_VARIANT := qcom
 
 # RIL
 TARGET_RIL_VARIANT := caf
+PROTOBUF_SUPPORTED := true
 
 # Recovery
 TARGET_RECOVERY_FSTAB := device/zuk/z2_plus/rootdir/etc/recovery/recovery.fstab

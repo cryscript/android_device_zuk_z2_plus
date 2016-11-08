@@ -1,0 +1,8 @@
+[
+  {
+    "remote":       "ss",
+    "repository":   "android_device_qcom_common",
+    "target_path":  "device/qcom/common",
+    "revision":     "pac-6.0"
+  }
+]

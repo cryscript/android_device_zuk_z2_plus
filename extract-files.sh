@@ -34,7 +34,7 @@ function extract() {
             mkdir -p $2/$DIR
         fi
         if [ "$SRC" = "adb" ]; then
-            # Try Slim target first
+            # Try PAC target first
             adb pull /system/$DEST $2/$DEST
             # if file does not exist try OEM target
             if [ "$?" != "0" ]; then

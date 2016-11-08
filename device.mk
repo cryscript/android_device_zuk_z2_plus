@@ -134,6 +134,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     Snap \
 
+# Gestures
+PRODUCT_PACKAGES += \
+    com.cyanogenmod.keyhandler
+
 # Charger
 PRODUCT_PACKAGES += \
     charger_res_images
@@ -143,6 +147,10 @@ PRODUCT_PACKAGES += \
     cneapiclient \
     com.quicinc.cne \
     services-ext
+
+# CNE
+PRODUCT_PACKAGES += \
+    libcnefeatureconfig
 
 # Display
 PRODUCT_PACKAGES += \
@@ -161,6 +169,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     fingerprintd
 
+# Gello
+PRODUCT_PACKAGES += \
+    Gello
 
 # GPS
 PRODUCT_PACKAGES += \
@@ -251,7 +262,8 @@ PRODUCT_PACKAGES += \
 # RIL
 PRODUCT_PACKAGES += \
     librmnetctl \
-    libxml2
+    libxml2 \
+    libprotobuf-cpp-full
 
 # Sensors
 PRODUCT_PACKAGES += \

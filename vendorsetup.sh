@@ -1,1 +1,1 @@
-add_lunch_combo slim_z2_plus-userdebug
+add_lunch_combo pac_z2_plus-userdebug
