@@ -2,7 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 # Device init scripts
 
-
 include $(CLEAR_VARS)
 LOCAL_MODULE		:= fstab.qcom
 LOCAL_MODULE_TAGS	:= optional eng

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
  * Copyright (C) 2014 The Linux Foundation. All rights reserved.
- * Copyright (C) 2016 The CyanogenMod Project
+ * Copyright (C) 2015 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
  */
 
 #define LOG_TAG "lights"
-
 #include <cutils/log.h>
 
 #include <stdint.h>
@@ -33,17 +32,18 @@
 
 #include <hardware/lights.h>
 
+/******************************************************************************/
+
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
-
 static struct light_state_t g_attention;
 static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 
-static const char RED_LED_FILE[]
+char const*const RED_LED_FILE
         = "/sys/class/leds/led:rgb_red/brightness";
 
-static const char LCD_FILE[]
+char const*const LCD_FILE
         = "/sys/class/leds/lcd-backlight/brightness";
 
 static const char RED_BLINK_FILE[]
@@ -55,16 +55,11 @@ static int BRIGHTNESS_RAMP[RAMP_SIZE]
 #define RAMP_STEP_DURATION 50
 
 /**
- * Device methods
+ * device methods
  */
 
-static void init_globals(void)
-{
-    // Init the mutex
-    pthread_mutex_init(&g_lock, NULL);
-}
-
-static int write_int(char const* path, int value)
+static int
+write_int(char const* path, int value)
 {
     int fd;
     static int already_warned = 0;
@@ -85,7 +80,8 @@ static int write_int(char const* path, int value)
     }
 }
 
-static int write_str(char const* path, char* value)
+static int
+write_str(char const* path, char* value)
 {
     int fd;
     static int already_warned = 0;
@@ -99,26 +95,35 @@ static int write_str(char const* path, char* value)
         return amt == -1 ? -errno : 0;
     } else {
         if (already_warned == 0) {
-            ALOGE("write_str failed to open %s\n", path);
+            ALOGE("write_int failed to open %s\n", path);
             already_warned = 1;
         }
         return -errno;
     }
 }
 
-static int is_lit(struct light_state_t const* state)
+void init_globals(void)
+{
+    // init the mutex
+    pthread_mutex_init(&g_lock, NULL);
+}
+
+static int
+is_lit(struct light_state_t const* state)
 {
     return state->color & 0x00ffffff;
 }
 
-static int rgb_to_brightness(struct light_state_t const* state)
+static int
+rgb_to_brightness(struct light_state_t const* state)
 {
     int color = state->color & 0x00ffffff;
     return ((77*((color>>16)&0x00ff))
             + (150*((color>>8)&0x00ff)) + (29*(color&0x00ff))) >> 8;
 }
 
-static int set_light_backlight(struct light_device_t* dev,
+static int
+set_light_backlight(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     int err = 0;
@@ -132,7 +137,8 @@ static int set_light_backlight(struct light_device_t* dev,
     return err;
 }
 
-static int set_speaker_light_locked(struct light_device_t* dev,
+static int
+set_speaker_light_locked(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     int red;
@@ -188,7 +194,8 @@ static int set_speaker_light_locked(struct light_device_t* dev,
     return 0;
 }
 
-static void handle_speaker_light_locked(struct light_device_t* dev)
+static void
+handle_speaker_light_locked(struct light_device_t* dev)
 {
     if (is_lit(&g_attention)) {
         set_speaker_light_locked(dev, &g_attention);
@@ -199,7 +206,8 @@ static void handle_speaker_light_locked(struct light_device_t* dev)
     }
 }
 
-static int set_light_battery(struct light_device_t* dev,
+static int
+set_light_battery(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     pthread_mutex_lock(&g_lock);
@@ -209,19 +217,47 @@ static int set_light_battery(struct light_device_t* dev,
     return 0;
 }
 
-static int set_light_notifications(struct light_device_t* dev,
+static int
+set_light_notifications(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     pthread_mutex_lock(&g_lock);
 
+    unsigned int brightness;
+    unsigned int color;
+    unsigned int rgb[3];
+
     g_notification = *state;
+
+    // If a brightness has been applied by the user
+    brightness = (g_notification.color & 0xFF000000) >> 24;
+    if (brightness > 0 && brightness < 0xFF) {
+
+        // Retrieve each of the RGB colors
+        color = g_notification.color & 0x00FFFFFF;
+        rgb[0] = (color >> 16) & 0xFF;
+        rgb[1] = (color >> 8) & 0xFF;
+        rgb[2] = color & 0xFF;
+
+        // Apply the brightness level
+        if (rgb[0] > 0)
+            rgb[0] = (rgb[0] * brightness) / 0xFF;
+        if (rgb[1] > 0)
+            rgb[1] = (rgb[1] * brightness) / 0xFF;
+        if (rgb[2] > 0)
+            rgb[2] = (rgb[2] * brightness) / 0xFF;
+
+        // Update with the new color
+        g_notification.color = (rgb[0] << 16) + (rgb[1] << 8) + rgb[2];
+    }
 
     handle_speaker_light_locked(dev);
     pthread_mutex_unlock(&g_lock);
     return 0;
 }
 
-static int set_light_attention(struct light_device_t* dev,
+static int
+set_light_attention(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     pthread_mutex_lock(&g_lock);
@@ -232,7 +268,8 @@ static int set_light_attention(struct light_device_t* dev,
 }
 
 /** Close the lights device */
-static int close_lights(struct light_device_t *dev)
+static int
+close_lights(struct light_device_t *dev)
 {
     if (dev) {
         free(dev);
@@ -241,8 +278,10 @@ static int close_lights(struct light_device_t *dev)
 }
 
 
+/******************************************************************************/
+
 /**
- * Module methods
+ * module methods
  */
 
 /** Open a new instance of a lights device using name */
