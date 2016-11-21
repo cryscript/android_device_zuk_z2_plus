@@ -61,7 +61,7 @@ ENABLE_CPUSETS := true
 TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
-BOARD_KERNEL_CMDLINE := console=tty60,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=16M@0-0xffffffff androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=tty60,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=16M@0-0xffffffff
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
@@ -182,22 +182,16 @@ TARGET_POWERHAL_VARIANT := qcom
 
 # RIL
 TARGET_RIL_VARIANT := caf
-PROTOBUF_SUPPORTED := true
 
 # Recovery
 TARGET_RECOVERY_FSTAB := device/zuk/z2_plus/rootdir/etc/recovery/recovery.fstab
 TARGET_RECOVERY_UI_LIB := librecovery_ui_msm
 TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_msm
 TARGET_RELEASETOOLS_EXTENSIONS := device/qcom/common
+BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
-TW_INCLUDE_CRYPTO := true
-BOARD_HAS_NO_REAL_SDCARD := true
-RECOVERY_SDCARD_ON_DATA := true
-BOARD_HAS_LARGE_FILESYSTEM := true
-DEVICE_RESOLUTION := 1080x1920
-HAVE_SELINUX := true
-TARGET_RECOVERY_PIXEL_FORMAT := "BGBX_8888"
+WITH_LZMA_OTA := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk

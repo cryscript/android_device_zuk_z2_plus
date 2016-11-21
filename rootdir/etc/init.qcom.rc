@@ -66,12 +66,6 @@ on fs
     mount_all fstab.qcom
 
 on boot
-    # Update foreground and background cpusets
-    write /dev/cpuset/foreground/cpus 0-3
-    write /dev/cpuset/foreground/boost/cpus 2-3
-    write /dev/cpuset/background/cpus 0-1
-    write /dev/cpuset/system-background/cpus 0-3
-
     # Secure touch
     chmod 0660 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch_enable
     chmod 0440 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch
@@ -226,19 +220,6 @@ on boot
     # For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
 
-#   Define TCP buffer sizes for various networks
-#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 4096,87380,524288,4096,16384,110208
-    setprop net.tcp.buffersize.lte     2097152,4194304,8388608,262144,524288,1048576
-    setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
-    setprop net.tcp.buffersize.hspa    4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hsupa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hsdpa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hspap   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
-    setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
-    setprop net.tcp.buffersize.evdo    4094,87380,524288,4096,16384,262144
-
     setprop net.tcp.2g_init_rwnd 10
 
 #   Assign TCP buffer thresholds to be ceiling value of technology maximums
@@ -285,6 +266,14 @@ on boot
 
     # bond0 used by FST Manager
     chown wifi wifi /sys/class/net/bond0/bonding/queue_id
+
+    # Don't reset entire SoC on individual subsystem crash
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys4/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys5/restart_level "related"
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -461,7 +450,7 @@ on post-fs-data
 
 # start camera server as daemon
 service qcamerasvr /system/bin/mm-qcamera-daemon
-    class main
+    class late_start
     user camera
     group camera system inet input graphics
     writepid /dev/cpuset/system-background/tasks
@@ -551,69 +540,6 @@ service audiod /system/bin/audiod
    class late_start
    user system
    group system
-
-service usf_tester /system/bin/usf_tester
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_epos /system/bin/usf_epos
-    class main
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_gesture /system/bin/usf_gesture
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_sync_gesture /system/bin/usf_sync_gesture
-    user system
-    group system inet audio
-    disabled
-    oneshot
-
-service usf_p2p /system/bin/usf_p2p
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_hovering /system/bin/usf_hovering
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_proximity /system/bin/usf_proximity
-    class late_start
-    user system
-    group system inet audio
-
-service usf_pairing /system/bin/usf_pairing
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf_sw_calib /system/bin/usf_sw_calib
-    user system
-    group system inet
-    disabled
-    oneshot
-
-service usf-post-boot /system/bin/sh /system/etc/usf_post_boot.sh
-    class late_start
-    user root
-    disabled
-    oneshot
-
-on property:init.svc.bootanim=stopped
-    start usf-post-boot
 
 service imsqmidaemon /system/bin/imsqmidaemon
     class main
@@ -1352,6 +1278,9 @@ on property:sys.qbcharger.enable=true
 
 on property:sys.qbcharger.enable=false
     stop qbcharger
+
+on charger
+    setprop persist.sys.usb.config charging
 
 service diag_mdlog_start /system/bin/diag_mdlog -c
     class late_start

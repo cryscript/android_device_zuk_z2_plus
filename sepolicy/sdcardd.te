@@ -1,1 +1,2 @@
 allow sdcardd userdata_block_device:blk_file r_file_perms;
+allow sdcardd system_data_file:dir { read open setattr };
