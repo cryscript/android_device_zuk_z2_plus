@@ -27,7 +27,7 @@ persist.panel.mountflip=3
 
 # OTA Updates
 ro.ota.systemname=RR-M
-ro.ota.version=2016112100
+ro.ota.version=2016112200
 ro.ota.manifest=https://raw.githubusercontent.com/cryscript/misc/RR/ota.xml
 
 debug.sf.hw=1
