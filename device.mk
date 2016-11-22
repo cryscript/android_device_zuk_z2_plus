@@ -167,7 +167,8 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint sensor
 PRODUCT_PACKAGES += \
-    fingerprintd
+    fingerprintd \
+    ZukPocketMode
 
 # Gello
 PRODUCT_PACKAGES += \
@@ -262,8 +263,7 @@ PRODUCT_PACKAGES += \
 # RIL
 PRODUCT_PACKAGES += \
     librmnetctl \
-    libxml2 \
-    libprotobuf-cpp-full
+    libxml2
 
 # Sensors
 PRODUCT_PACKAGES += \

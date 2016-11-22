@@ -90,8 +90,6 @@ using namespace loc_core;
 
 boolean configAlreadyRead = false;
 unsigned int agpsStatus = 0;
-loc_gps_cfg_s_type gps_conf;
-loc_sap_cfg_s_type sap_conf;
 
 /* Parameter spec table */
 static const loc_param_s_type gps_conf_table[] =
@@ -111,6 +109,7 @@ static const loc_param_s_type gps_conf_table[] =
   {"XTRA_SERVER_2",                  &gps_conf.XTRA_SERVER_2,                  NULL, 's'},
   {"XTRA_SERVER_3",                  &gps_conf.XTRA_SERVER_3,                  NULL, 's'},
   {"USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL",  &gps_conf.USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL,          NULL, 'n'},
+  {"AGPS_CONFIG_INJECT",             &gps_conf.AGPS_CONFIG_INJECT,             NULL, 'n'},
 };
 
 static const loc_param_s_type sap_conf_table[] =
@@ -182,6 +181,9 @@ static void loc_default_parameters(void)
 
    /* None of the 10 slots for agps certificates are writable by default */
    gps_conf.AGPS_CERT_WRITABLE_MASK = 0;
+
+   /* inject supl config to modem with config values from config.xml or gps.conf, default 1 */
+   gps_conf.AGPS_CONFIG_INJECT = 1;
 }
 
 // 2nd half of init(), singled out for
@@ -408,7 +410,9 @@ struct LocEngSetServerIpv4 : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setServer(mNlAddr, mPort, mServerType);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setServer(mNlAddr, mPort, mServerType);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngSetServerIpv4 - addr: %x, port: %d, type: %s",
@@ -439,7 +443,9 @@ struct LocEngSetServerUrl : public LocMsg {
         delete[] mUrl;
     }
     inline virtual void proc() const {
-        mAdapter->setServer(mUrl, mLen);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setServer(mUrl, mLen);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngSetServerUrl - url: %s", mUrl);
@@ -460,7 +466,9 @@ struct LocEngAGlonassProtocol : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setAGLONASSProtocol(mAGlonassProtocl);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setAGLONASSProtocol(mAGlonassProtocl);
+        }
     }
     inline  void locallog() const {
         LOC_LOGV("A-GLONASS protocol: 0x%lx", mAGlonassProtocl);
@@ -481,7 +489,9 @@ struct LocEngSuplVer : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setSUPLVersion(mSuplVer);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setSUPLVersion(mSuplVer);
+        }
     }
     inline  void locallog() const {
         LOC_LOGV("SUPL Version: %d", mSuplVer);
@@ -500,7 +510,7 @@ struct LocEngSuplMode : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mUlp->setCapabilities(getCarrierCapabilities());
+        mUlp->setCapabilities(ContextBase::getCarrierCapabilities());
     }
     inline  void locallog() const {
     }
@@ -520,7 +530,9 @@ struct LocEngLppConfig : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setLPPConfig(mLppConfig);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setLPPConfig(mLppConfig);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngLppConfig - profile: %d", mLppConfig);
@@ -1684,24 +1696,6 @@ inline void LocEngReportGpsMeasurement::log() const {
   }
 #define INIT_CHECK(ctx, ret) STATE_CHECK(ctx, "instance not initialized", ret)
 
-uint32_t getCarrierCapabilities() {
-    #define carrierMSA (uint32_t)0x2
-    #define carrierMSB (uint32_t)0x1
-    #define gpsConfMSA (uint32_t)0x4
-    #define gpsConfMSB (uint32_t)0x2
-    uint32_t capabilities = gps_conf.CAPABILITIES;
-    if ((gps_conf.SUPL_MODE & carrierMSA) != carrierMSA) {
-        capabilities &= ~gpsConfMSA;
-    }
-    if ((gps_conf.SUPL_MODE & carrierMSB) != carrierMSB) {
-        capabilities &= ~gpsConfMSB;
-    }
-
-    LOC_LOGV("getCarrierCapabilities: CAPABILITIES %x, SUPL_MODE %x, carrier capabilities %x",
-             gps_conf.CAPABILITIES, gps_conf.SUPL_MODE, capabilities);
-    return capabilities;
-}
-
 /*===========================================================================
 FUNCTION    loc_eng_init
 
@@ -2736,6 +2730,7 @@ void loc_eng_configuration_update (loc_eng_data_s_type &loc_eng_data,
         gps_conf_tmp.SUPL_VER = gps_conf.SUPL_VER;
         gps_conf_tmp.LPP_PROFILE = gps_conf.LPP_PROFILE;
         gps_conf_tmp.A_GLONASS_POS_PROTOCOL_SELECT = gps_conf.A_GLONASS_POS_PROTOCOL_SELECT;
+        gps_conf_tmp.SUPL_MODE = gps_conf.SUPL_MODE;
         gps_conf_tmp.GPS_LOCK = gps_conf.GPS_LOCK;
         gps_conf = gps_conf_tmp;
     }

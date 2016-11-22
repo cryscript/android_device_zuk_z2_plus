@@ -40,8 +40,8 @@
         <item>500</item>      <!-- sunrise -->
         <item>750</item>
         <item>1000</item>     <!-- overcast -->
-        <item>5000</item>
-        <item>10000</item>    <!-- daylight -->
+        <item>3000</item>
+        <item>50000</item>    <!-- daylight -->
     </integer-array>
 
     <!-- Array of output values for LCD backlight corresponding to the LUX values
@@ -49,9 +49,9 @@
          than the size of the config_autoBrightnessLevels array.
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-        <item>7</item>
-        <item>12</item>
-        <item>17</item>
+        <item>5</item>
+        <item>9</item>
+        <item>15</item>
         <item>29</item>
         <item>35</item>
         <item>47</item>
