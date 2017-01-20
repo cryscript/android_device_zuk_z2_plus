@@ -22,13 +22,15 @@
 #
 
 
-TARGET_OTA_ASSERT_DEVICE := z2,Z2,z2plus,z2_plus
+TARGET_OTA_ASSERT_DEVICE := z2,z2_plus
 
 PLATFORM_PATH := device/zuk/z2_plus
 
 TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 
 BOARD_VENDOR := zuk
+
+TARGET_BUILD_VARIANT:=user
 
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
@@ -69,7 +71,7 @@ TARGET_KERNEL_APPEND_DTB := true
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
-TARGET_KERNEL_CONFIG := lineageos_z2plus_defconfig
+TARGET_KERNEL_CONFIG := lineageos_z2_plus_defconfig
 TARGET_KERNEL_SOURCE := kernel/zuk/msm8996
 
 # QCOM hardware
