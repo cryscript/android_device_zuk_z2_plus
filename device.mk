@@ -22,6 +22,7 @@
 #
 
 $(call inherit-product-if-exists, vendor/zuk/z2_plus/z2_plus-vendor.mk)
+$(call inherit-product-if-exists, device/zuk/z2_plus/vendor/copyfiles.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -141,8 +142,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:system/etc/sound_trigger_platform_info.xml
 
 # Camera
-PRODUCT_PACKAGES += \
-    Camera2
+#PRODUCT_PACKAGES += \
+#    Camera2
 
 # Connectivity Engine support (CNE)
 PRODUCT_PACKAGES += \
