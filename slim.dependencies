@@ -1,0 +1,11 @@
+[
+ {
+    "repository": "SlimRoms/android_external_stlport",
+    "target_path": "external/stlport",
+    "branch": "ng7.1"
+ },
+ {
+   "repository": "android_kernel_zuk_msm8996",
+   "target_path": "kernel/zuk/msm8996"
+ }
+]
