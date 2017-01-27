@@ -142,8 +142,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:system/etc/sound_trigger_platform_info.xml
 
 # Camera
-#PRODUCT_PACKAGES += \
-#    Camera2
+PRODUCT_PACKAGES += \
+    Snap
 
 # Connectivity Engine support (CNE)
 PRODUCT_PACKAGES += \
