@@ -32,6 +32,8 @@ BOARD_VENDOR := zuk
 
 #TARGET_BUILD_VARIANT:=user
 
+TARGET_UNOFFICIAL_BUILD_ID := Fedor917
+
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
 
