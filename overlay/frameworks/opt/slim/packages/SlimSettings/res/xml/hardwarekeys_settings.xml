@@ -26,6 +26,12 @@
                 android:title="@string/enable_hw_keys_title"
                 android:defaultValue="true" />
 
+            <com.slim.settings.preference.ButtonBacklightBrightness
+                android:dependency="enable_hw_keys"
+                android:key="button_backlight"
+                android:title="@string/hardware_keys_lights_enable_title"
+                android:persistent="false" />
+
         </PreferenceCategory>
 
         <PreferenceCategory
