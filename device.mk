@@ -34,6 +34,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     org.ifaa.android.manager
 
+# Add some apps
+PRODUCT_PACKAGES += \
+    Messaging \
+    Email
+
 # Device was launched with M
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.first_api_level=23
