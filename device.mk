@@ -24,15 +24,15 @@
 $(call inherit-product-if-exists, vendor/zuk/z2_plus/z2_plus-vendor.mk)
 $(call inherit-product-if-exists, device/zuk/z2_plus/vendor/copyfiles.mk)
 
+# System properties
+-include $(LOCAL_PATH)/system_prop.mk
+
+#Substratum
+PRODUCT_PACKAGES += \
+    masquerade
+
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
-
-# Alipay
-PRODUCT_PACKAGES += \
-    org.ifaa.android.manager
-
-PRODUCT_BOOT_JARS += \
-    org.ifaa.android.manager
 
 # Device was launched with M
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -88,26 +88,11 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.heapstartsize=8m \
-    dalvik.vm.heapgrowthlimit=256m \
-    dalvik.vm.heapsize=512m \
-    dalvik.vm.heaptargetutilization=0.75 \
-    dalvik.vm.heapminfree=512k \
-    dalvik.vm.heapmaxfree=8m
+# HWUI overrides
+$(call inherit-product, frameworks/native/build/phone-xxhdpi-3072-hwui-memory.mk)
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hwui.texture_cache_size=96 \
-    ro.hwui.layer_cache_size=64 \
-    ro.hwui.r_buffer_cache_size=12 \
-    ro.hwui.path_cache_size=39 \
-    ro.hwui.gradient_cache_size=1 \
-    ro.hwui.drop_shadow_cache_size=7 \
-    ro.hwui.texture_cache_flushrate=0.4 \
-    ro.hwui.text_small_cache_width=2048 \
-    ro.hwui.text_small_cache_height=2048 \
-    ro.hwui.text_large_cache_width=3072 \
-    ro.hwui.text_large_cache_height=2048
+# Dalvik overrides
+$(call inherit-product, frameworks/native/build/phone-xxhdpi-3072-dalvik-heap.mk)
 
 # Haters gonna hate..
 PRODUCT_CHARACTERISTICS := nosdcard
@@ -132,14 +117,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_platform_info.xml:system/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:system/etc/listen_platform_info.xml \
-    $(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_dtp.xml:system/etc/mixer_paths_dtp.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_i2s.xml:system/etc/mixer_paths_i2s.xml \
     $(LOCAL_PATH)/audio/mixer_paths_tasha.xml:system/etc/mixer_paths_tasha.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_tasha_z2_plus.xml:system/etc/mixer_paths_tasha_z2_plus.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths.xml:system/etc/sound_trigger_mixer_paths.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9330.xml:system/etc/sound_trigger_mixer_paths_wcd9330.xml \
     $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:system/etc/sound_trigger_platform_info.xml
+
+# Browser
+PRODUCT_PACKAGES += \
+    Gello
+
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -164,7 +150,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     ZukDoze
 
-# Fingerprint sensor
+# Fingerprint
 PRODUCT_PACKAGES += \
     fingerprintd
 
@@ -175,7 +161,8 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     gps.msm8996 \
-    libcurl
+    libcurl \
+    libgnsspps
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/flp.conf:system/etc/flp.conf \
@@ -189,10 +176,15 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libsdm-disp-apis
 
+# IPA Manager
+PRODUCT_PACKAGES += \
+    ipacm \
+    IPACM_cfg.xml
+
 # IPC router config
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
-	
+
 # Thermal
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine.conf:system/etc/thermal-engine.conf
@@ -210,7 +202,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
     $(LOCAL_PATH)/keylayout/synaptics_dsx.kl:system/usr/keylayout/synaptics_dsx.kl \
     $(LOCAL_PATH)/keylayout/msm8996-tasha-mtp-snd-card_Button_Jack.kl:system/usr/keylayout/msm8996-tasha-mtp-snd-card_Button_Jack.kl \
-    $(LOCAL_PATH)/keylayout/qpnp_pon.kl:system/usr/keylayout/qpnp_pon.kl 
+    $(LOCAL_PATH)/keylayout/qpnp_pon.kl:system/usr/keylayout/qpnp_pon.kl
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -264,6 +256,7 @@ PRODUCT_PACKAGES += \
     init.qcom.sh \
     init.qcom.usb.rc \
     init.qcom.usb.sh \
+    init.qcom.bt.sh \
     ueventd.qcom.rc
 
 # RIL
@@ -276,6 +269,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     sensors.msm8996
 
+# FlipFlap
+PRODUCT_PACKAGES += \
+    FlipFlap
+
 # Wifi
 PRODUCT_PACKAGES += \
     ipacm \
@@ -285,6 +282,7 @@ PRODUCT_PACKAGES += \
     libQWiFiSoftApCfg \
     libwpa_client \
     hostapd \
+    readmac \
     dhcpcd.conf \
     wpa_supplicant \
     wpa_supplicant.conf
@@ -300,4 +298,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/qca_cld/WCNSS_cfg.dat
+
+# Keyhandler
+PRODUCT_PACKAGES += \
+    com.cyanogenmod.keyhandler
+
+PRODUCT_SYSTEM_SERVER_JARS += com.cyanogenmod.keyhandler
+# never dexopt the keyhandler
+$(call add-product-dex-preopt-module-config,com.cyanogenmod.keyhandler,disable)
 
