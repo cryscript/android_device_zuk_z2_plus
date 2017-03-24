@@ -1,3 +1,3 @@
 Device configuration for ZUK Z2;
-Based on Davide D M, with commits from oneplus 3;
-Edited by Fedor917.
+
+For building TWRP based on OmniROM 7.1.1 sources;

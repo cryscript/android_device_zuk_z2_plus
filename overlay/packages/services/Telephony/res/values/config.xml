@@ -54,4 +54,7 @@
 
     <!-- Allows the telephony HFA logic to run even if we're not in setup wizard. -->
     <bool name="config_allow_hfa_outside_of_setup_wizard">false</bool>
+    
+    <!-- Show Preferred Network Type options in No SIM case -->
+    <bool name="config_no_sim_display_network_modes">true</bool>
 </resources>
