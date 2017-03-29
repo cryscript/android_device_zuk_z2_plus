@@ -22,13 +22,15 @@
 #
 
 
-TARGET_OTA_ASSERT_DEVICE := z2,Z2,z2plus,z2_plus
+TARGET_OTA_ASSERT_DEVICE := z2,z2_plus
 
 PLATFORM_PATH := device/zuk/z2_plus
 
 TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 
 BOARD_VENDOR := zuk
+
+TARGET_BUILD_VARIANT:=user
 
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
@@ -62,7 +64,7 @@ ENABLE_CPUSETS := true
 TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
-BOARD_KERNEL_CMDLINE := console=tty60,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=16M@0-0xffffffff
+BOARD_KERNEL_CMDLINE := console=tty60,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=16M@0-0xffffffff androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
@@ -176,6 +178,7 @@ BOARD_FLASH_BLOCK_SIZE := 262144
 TARGET_POWERHAL_VARIANT := qcom
 
 # RIL
+PROTOBUF_SUPPORTED := true
 TARGET_RIL_VARIANT := caf
 SIM_COUNT := 2
 
