@@ -22,6 +22,7 @@
 #
 
 $(call inherit-product-if-exists, vendor/zuk/z2_plus/z2_plus-vendor.mk)
+$(call inherit-product-if-exists, device/zuk/z2_plus/vendor/copyfiles.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -125,7 +126,7 @@ PRODUCT_COPY_FILES += \
 
 # Browser
 PRODUCT_PACKAGES += \
-		Gello
+    Gello
 
 
 # Camera
