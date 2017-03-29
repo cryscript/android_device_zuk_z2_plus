@@ -1,0 +1,187 @@
+#!/system/bin/sh
+#NAMELESS_PROFILE_V5_23rd_November
+#"Nameless" Tweaks for OP3 by @Senthil360
+#Thanks to @Asiier ,  @patalao and @Mostafa Wael
+#This profile works in a way which takes advantage of the HMP system of SD 820,
+#LITTLE cluster frequency are kept at low to medium levels 
+# BIG Cluster comes into play when load is around 90 to help out LITTLE and ease the load 
+#So eventually after load is reduced  both clusters idle soon,  thus saving a lot of Battery
+#Other than Heavy games this profile could be used for any type of scenario, should result better battery life than stock with almost no drop in performance. 
+#TWEAKS_BEGIN
+BB=/system/etc/AKT/busybox
+divider="==========================="
+if [ -e "/data/system/NLB" ]; then
+    check=$($BB cat /data/system/NLB);
+    kill - 9 "$check" 2>/dev/null
+fi
+echo $$ > /data/system/NLB
+echo "$divider"
+echo ""
+if [ -e "/sys/block/sda/queue/scheduler" ]; then
+    if [ -e /sys/block/sda/queue/scheduler_hard ]; then
+        echo zen > /sys/block/sda/queue/scheduler_hard
+    fi
+    echo zen > /sys/block/sda/queue/scheduler
+echo 0 > /sys/block/sda/queue/iostats
+echo 1 > /sys/block/sda/queue/rq_affinity
+echo "Setting I/O scheduler to zen... "
+echo "Configuring I/O parameters..."
+echo ""
+sleep 0.1
+echo "$divider"
+echo ""
+fi
+if [ -e "/sys/devices/virtual/block/dm-0/queue/scheduler" ]; then
+   if [ -e /sys/block/dm-0/queue/scheduler_hard ]; then
+        echo zen > /sys/block/dm-0/queue/scheduler_hard
+   fi
+    echo zen > /sys/block/dm-0/queue/scheduler
+echo 0 > /sys/devices/virtual/block/dm-0/queue/iostats
+echo 1 > /sys/devices/virtual/block/dm-0/queue/rq_affinity
+echo "Setting I/O scheduler to zen... "
+echo "Configuring I/O parameters..."
+echo ""
+sleep 0.1
+echo "$divider"
+echo ""
+fi
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "Setting scaling governor to Interactive... "
+echo "Applying values for Interactive tunables... "
+echo "Configuring the Target_loads... "
+echo ""
+echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+maxfreq_0=$(cat "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")				
+if test $maxfreq_0 -eq 1593600; then
+	chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo 1593600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq			
+	chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+ chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+	echo 1 400000:28 600000:40 800000:50 960000:65 1100000:75 1200000:88 1400000:95 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+  chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+elif test $maxfreq_0 -eq 1728000; then
+	chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo 1728000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+  chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+	echo 1 400000:28 600000:40 800000:50 960000:65 1100000:75 1200000:88 1400000:95 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+  chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+else
+    chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+	echo 1 400000:28 600000:40 800000:50 960000:65 1100000:75 1200000:88 1400000:95 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+  chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+fi
+chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
+echo -1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
+echo 960000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+echo 300 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
+echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/ignore_hispeed_on_notif
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/fast_ramp_down
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/align_windows
+echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notif
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
+sleep 0.1
+echo - e "\e[01;37m LITTLE cluster Tweaks\e[00;37m : \e[01;32m ACTIVATED \e[00;37m"
+echo ""
+#_________________________________________________________
+#Tweaks_for_big_cluster
+chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+echo interactive > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+#Grab Maximum Achievable Frequency for the Big Cluster
+maxfreq_2=$(cat "/sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq")				
+if test $maxfreq_2 -eq 2150400; then
+	chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+	echo 2150400 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+	chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+	echo 1 400000:29 600000:50 800000:60 900000:70 1200000:80 1600000:88 1750000:90 1900000:95 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads 
+chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+elif test $maxfreq_2 -eq 2265600; then
+	chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+	echo 2265600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+	chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+echo 1 400000:29 600000:50 800000:60 900000:70 1200000:80 1600000:88 1750000:90 1900000:95 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads 
+chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+else
+     chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+echo 1 400000:29 600000:50 800000:60 900000:70 1200000:80 1600000:88 1750000:90 1900000:95 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads 
+chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+fi
+#Tweak_Interactive_Governor_BIG
+chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
+echo -1 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/timer_slack
+echo 1478400 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/hispeed_freq
+echo 40000 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/timer_rate
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/above_hispeed_delay
+echo 300 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/go_hispeed_load
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/min_sample_time
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/max_freq_hysteresis
+echo 1 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/ignore_hispeed_on_notif
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/boost
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/fast_ramp_down
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/align_windows
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/use_migration_notif
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/use_sched_load
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/boostpulse_duration
+echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/io_is_busy
+sleep 0.1
+echo - e "\e[01;37m big cluster Tweaks\e[00;37m : \e[01;32mACTIVATED \e[00;37m"
+echo ""
+echo "$divider"
+echo ""
+sleep 0.1
+echo "Configuring Boost parameters"
+echo ""
+chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
+echo 0:960000 1:0 2:940000 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+chmod 644 /sys/module/cpu_boost/parameters/boost_ms
+echo 150 > /sys/module/cpu_boost/parameters/boost_ms
+chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
+echo 50 > /sys/module/cpu_boost/parameters/input_boost_ms
+if [ -e "/sys/module/workqueue/parameters/power_efficient" ]; then
+chmod 644 /sys/module/workqueue/parameters/power_efficient
+echo Y > /sys/module/workqueue/parameters/power_efficient
+fi
+if [ -e "/sys/module/msm_performance/parameters/touchboost" ]; then
+chmod 644 /sys/module/msm_performance/parameters/touchboost
+echo 1 > /sys/module/msm_performance/parameters/touchboost
+fi
+sleep 0.1
+echo "Configuring LMK parameters"
+echo ""
+if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
+chmod 666 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+fi
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+chmod 666 /sys/module/lowmemorykiller/parameters/minfree
+chown root /sys/module/lowmemorykiller/parameters/minfree
+echo "18432,23040,27648,51200,110296,147456" > /sys/module/lowmemorykiller/parameters/minfree
+fi
+#Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
+sleep 0.1
+echo "Configuring Thermal parameters"
+echo ""
+chmod 644 /sys/module/msm_thermal/core_control/enabled
+echo 1 > /sys/module/msm_thermal/core_control/enabled
+chmod 644 /sys/module/msm_thermal/parameters/enabled
+echo N > /sys/module/msm_thermal/parameters/enabled
+echo "$divider"
+echo ""
+sleep 0.5
+echo "Interactive *nameless* tweaks applied" > /data/system/nameless
+echo $date >> /data/system/nameless
+echo "Nameless Performance" > /data/system/current_profile
+echo "Nameless Performance profile Activated"
+sleep 4

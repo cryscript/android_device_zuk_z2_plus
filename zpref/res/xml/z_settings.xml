@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Developed by andr68rus
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="akt_profile"
+        android:title="@string/akt_profile_title" >
+
+		<ListPreference
+			android:key="akt"
+			android:title="@string/akt_title"
+			android:summary="@string/akt_summary"
+			android:defaultValue="1"
+			android:entries="@array/akt_profiles"
+			android:entryValues="@array/akt_values"
+			android:dialogTitle="@string/akt_dialogTitle" />
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

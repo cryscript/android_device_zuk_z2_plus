@@ -275,6 +275,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     FlipFlap
 
+# ZPref settigs modules
+PRODUCT_PACKAGES += \
+    ZPref
+
+# ZPref Files
+PRODUCT_COPY_FILES += \
+    $(call find-copy-subdir-files,*,device/zuk/z2_plus/zpref/files,/system/etc)
+
 # Wifi
 PRODUCT_PACKAGES += \
     ipacm \

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="akt_profiles">
+		<item>Stock</item>
+		<item>[BAT] Nameless Battery by @Senthil360</item>
+		<item>[BAT] FairPark by @Asiier</item>
+		<item>[BAT] Fusion Conservative by @patalao</item>
+		<item>[BAT] Project X.A.N.A Battery by @Asiier</item>
+		<item>[BAT] Project X.A.N.A Battery Extreme by @Asiier</item>
+		<item>[PER] Burnout PR4 by @Mostafa Wael</item>
+		<item>[PER] Burnout PR3 by @Mostafa Wael</item>
+		<item>[PER] Nameless Perfomance by @Senthil360</item>
+		<item>[PER] Fusion Performance by @Patalao</item>
+		<item>[BAL] GhostPepper by @Asiier</item>
+		<item>[BAL] Fusion Balanced by @Patalao</item>
+		<item>[BAL] Nameless Balanced by @Senthil360</item>
+		<item>[BAL] HawkPepper by @Asiier</item>
+		<item>[BAL] Project by Zhana Balanced by @Asiier</item>
+		<item>[BAL] Project by X.A.N.A Balanced by @Asiier</item>
+	</string-array>
+	<string-array name="akt_values">
+		<item>Stock</item>
+		<item>NLB_battery</item>
+		<item>FairPark</item>
+		<item>FusionC</item>
+		<item>PX_battery</item>
+		<item>PX_battery_extreme</item>
+		<item>BEF</item>
+		<item>BPN</item>
+		<item>NLB_performance</item>
+		<item>FusionP</item>
+		<item>GhostPepper</item>
+		<item>FusionB</item>
+		<item>NLB_balanced</item>
+		<item>HawkPepper</item>
+		<item>PZ_balanced</item>
+		<item>PX_balanced</item>
+	</string-array>
+</resources>
