@@ -33,7 +33,7 @@ import android.preference.ListPreference;
 public class ZPrefSettings extends PreferenceActivity implements OnPreferenceChangeListener {
 	private static final boolean DEBUG = false;
 	private static final String TAG = "ZPref";
-	private static final String AKT_KEY = "akt";\
+	private static final String AKT_KEY = "akt";
 	private static final String AKT_SYSTEM_PROPERTY = "persist.AKT.profile";
 
 	private ListPreference mAKT;
